@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>全国水利安全远程培训平台</title>
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/demo.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/easyui.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/icon.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/app.min.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/normalize.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/style.css">
+</head>
+<body style="height: 100%">
+<div th:replace="framework::header"></div>
+<div class="content" style="height: 72.5%;">
+    <div class="content-body">
+        <div th:replace="framework_slider::slider(date)"></div>
+        <div class="search-block" style="width: 80%;height: 100%">
+            <div th:replace="framework_content::brand"></div>
+            <div style="width: 400px;margin: auto;padding-top: 20px">
+             <form th:action="@{/exam/new}" id="type" method="post" th:object="${exam}" style="align-content: center">
+            <table style="border-spacing:   10px;">
+                <tr>
+                    <td>
+                        考试类型编码：
+                    </td>
+                    <td>
+                        <input name="number" class="easyui-validatebox" style="line-height:26px;border:1px solid #ccc"
+                            data-options="required:true,missingMessage:'考试类型编码不能为空！'">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        考试类型名称：
+                    </td>
+                    <td>
+                        <input name="name" class="easyui-validatebox" style="line-height:26px;border:1px solid #ccc"
+                            data-options="required:true,missingMessage:'考试类型不能为空！'">
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>测试：<a href="#" class="easyui-linkbutton" onclick="addTest()">添加测试</a></td>
+                </tr>
+                <tr>
+                    <table id="tb">
+                        <tr>
+                            <td>
+                                <input name='tests' class='easyui-validatebox' style='line-height:26px;border:1px solid #ccc' data-options='required:true'>
+                            </td>
+                        </tr>
+                    </table>
+                </tr>
+                <tr>
+                    <td>测试数量：<span id="testAmount">1</span></td>
+                </tr>
+                <tr align="center">
+                    <td colspan="2">
+                        <input href="javascript:void(0)" type="submit" value="提交" class="easyui-linkbutton">
+                    </td>
+                </tr>
+            </table>
+        </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="framework::footer"></div>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.easyui.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/content/exam.js"></script>
+<script type="application/javascript">
+    $(document).ready(function(){
+        $("#type").form({
+            onSubmit:function(){
+              return $("#type").form('validate');
+            },
+            async:false,
+            success:function(data){
+                var data = eval('(' + data + ')');
+                if(data.success){
+                    window.location = "/cjcx/exam";
+                }else{
+                    alert(data.message);
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

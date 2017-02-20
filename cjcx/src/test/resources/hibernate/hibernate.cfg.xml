@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <!--
+		一个session-factory代表一个数据库
+	 -->
+  <session-factory>
+    <!--
+        方言
+        告诉hibernate用什么样的数据库
+    -->
+    <property name="dialect">
+      org.hibernate.dialect.MySQL5InnoDBDialect
+    </property>
+
+
+    <!--
+        validate 加载hibernate时，验证数据库的结构
+        update  加载hibernate时，检查数据库，如果表不存在，则创建，如果存在，则更新
+        create  每次加载hiberante,都会创建表
+        create-drop  每次加载hiberante,创建，卸载hiberante时，销毁
+    -->
+    <property name="hbm2ddl.auto">update</property>
+    <!--
+        显示sql语句
+    -->
+    <property name="show_sql">true</property>
+    <!--
+        格式化sql语句
+    -->
+    <property name="format_sql">true</property>
+    <!--
+        session要从当前线程中产生
+    -->
+    <!--<property name="current_session_context_class">thread</property>-->
+    <!--
+        开启hibernate的统计机制
+    -->
+    <property name="hibernate.generate_statistics">true</property>
+    <property name="connection.url">jdbc:mysql://localhost:3306</property>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+      <mapping class="cjcx.entity.User"/>
+    <mapping resource="cjcx/entity/User.hbm.xml"/>
+    <mapping resource="cjcx/entity/Cj.hbm.xml"/>
+    <mapping class="cjcx.entity.Cj"/>
+    <mapping resource="cjcx/entity/Exam.hbm.xml"/>
+    <mapping class="cjcx.entity.Exam"/>
+    <mapping resource="cjcx/entity/Test.hbm.xml"/>
+    <mapping class="cjcx.entity.Test"/>
+      <mapping class="cjcx.entity.Grade"/>
+      <mapping resource="cjcx/entity/Grade.hbm.xml"/>
+      <mapping class="cjcx.entity.Role"/>
+      <mapping resource="cjcx/entity/Role.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

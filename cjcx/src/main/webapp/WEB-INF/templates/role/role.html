@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>全国水利安全远程培训平台</title>
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/demo.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/easyui.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/icon.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/app.min.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/normalize.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/style.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/zhezhao.css">
+</head>
+<body style="height: 100%">
+<div class="zhezhao" id="zhezhao"></div>
+<div th:replace="framework::header"></div>
+<div class="content" style="height: 72.5%;">
+    <div class="content-body " oncontextmenu="return false" ondragstart="return false" onselectstart ="return false"
+         onselect="document.selection.empty()"
+         oncopy="document.selection.empty()"
+         onbeforecopy="return false"
+         onmouseup="document.selection.empty()">
+        <div th:replace="framework_slider::slider(date)"></div>
+        <div class="search-block" style="width: 80%;height: 100%">
+            <div th:fragment="exam" style="height: 100%;">
+                <div th:replace="framework_content::brand" style="height: 10%"></div>
+                <div id="toolbar" style="padding:3px">
+                    <div>
+                        <a class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:addRole()">添加</a>
+                        <a class="easyui-linkbutton" iconCls="icon-edit"  plain="true" onclick="edit()">编辑</a>
+                        <a class="easyui-linkbutton" iconCls="icon-cancel"  plain="true" onclick="deletes()">删除</a>
+                        <hr>
+                    </div>
+                    <table style="font-size: 12; border-collapse:   separate;   border-spacing:   5px;">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span>权限名称:</span>
+                                <input id="typeid" class="easyui-textbox" style="line-height:26px;border:1px solid #ccc;width:200px">
+                            </td>
+                            <td>
+                                <a  class="easyui-linkbutton" plain="true" onclick="doSearch()" iconCls="icon-search">搜索</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="height: 90%">
+                    <table id="roleTable"   style="width:100%;height: 90%"
+                           data-options="
+               fit:true,
+               toolbar:'#toolbar',
+               rownumbers:true,
+               pagination:true">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="roleForm" class="easyui-panel" style="width:600px;padding:10px;
+            position: absolute;top:50%;left:50%;margin-left:-300px; z-index:1500;margin-top:-150px;"
+     data-options="closed:true">
+    <div style="width: 350px;margin: auto">
+        <form th:action="@{/role/new}" id="role" method="post" th:object="${role}" style="align-content: center">
+            <table>
+                <tr>
+                    <td>名称:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" data-options="required:true"></input></td>
+                </tr>
+            </table>
+            <div class="easyui-panel" style="padding:5px">
+                <ul id="tt" class="easyui-tree" data-options="animate:true,checkbox:true"></ul>
+            </div>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:formSubmit()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#roleForm').panel('close');document.getElementById('zhezhao').style.display='none';document.getElementById('roleForm').style.display='none' ">取消</a>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="framework::footer"></div>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.easyui.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/content/role.js"></script>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/easyui-lang-zh_CN.js"></script>
+</body>
+</html>

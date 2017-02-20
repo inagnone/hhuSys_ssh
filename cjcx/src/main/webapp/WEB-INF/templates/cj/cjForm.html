@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>全国水利安全远程培训</title>
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/demo.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/easyui.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/icon.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/app.min.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/normalize.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/style.css">
+</head>
+<body>
+<div th:replace="framework::header"></div>
+<div class="content">
+    <!--<div th:replace="framework_content::brand" style="height: 10%"></div>-->
+<div class="content-body">
+<div class="block"  width="400px">
+    <div class="form" data-options="fit:true" >
+        <div class="easyui-panel" th:width="600px" title="添加成绩">
+        <form>
+            <table>
+                <tr>
+                    <td>考试类型:</td>
+                    <td>
+                        <select class="easyui-textbox" type="text" name="name" data-options="required:true">
+
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>姓名:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>身份证:</td>
+                    <td><input class="easyui-textbox" type="text" name="idNumber" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>考试批次:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>工作单位:</td>
+                    <td><input class="easyui-textbox" type="text" name="company" data-options="required:true"></input></td>
+                </tr>
+            </table>
+        </form>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<div th:replace="framework::footer"></div>
+</body>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.easyui.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/content/exam.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/content/cj.js"></script>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="/cjcx/resources/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/app.min.css">
+</head>
+<body>
+    <div th:insert="framework::header"></div>
+
+    <div th:class="${#fields.hasErrors('${registFrom.*}')?'alert alert-danger':_}" role="alert">
+        <ul th:if="${#fields.hasErrors('${registFrom.*}')}">
+            <li th:each="err:${#fields.errors('${registFrom.*}')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <div class="login-content" >
+        <div class="login-box" style="height: 400px;width: 650px;margin-top: -50px">
+            <div class="login-box-top">
+                <div >注册</div>
+            </div>
+            <br>
+                <form class="form-horizontal" th:action="@{/user/registration.action}" th:object="${registFrom}" method="post">
+
+                <div th:class="${#fields.hasErrors()? 'form-group has-error':'form-group'}" class="form-group">
+                    <label th:for="${#ids.next('name')}" class="col-sm-3 control-label">用户名：</label>
+                    <div class="col-sm-6">
+                        <input class="form-control" th:field="*{name}" type="text" placeholder="用户名">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" th:for="${#ids.next('role')}">用户权限</label>
+                    <div class="col-sm-6">
+                        <select th:field="*{role}" class="form-control">
+                            <option th:each="role:${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div th:class="${#fields.hasErrors()? 'form-group has-error':'form-group'}" class="form-group">
+                    <label th:for="${#ids.next('password')}" class="col-sm-3 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;码：</label>
+                    <div class="col-sm-6">
+                        <input class="form-control" th:field="*{password}" type="password" placeholder="密码">
+                    </div>
+                </div>
+                <div th:class="${#fields.hasErrors()? 'form-group has-error':'form-group'}" class="form-group">
+                    <label th:for="${#ids.next('validpassword')}" class="col-sm-3 control-label">确认密码：</label>
+                    <div class="col-sm-6">
+                        <input class="form-control" th:field="*{validpassword}" type="password" placeholder="确认密码">
+                    </div>
+                </div>
+                <div th:class="${#fields.hasErrors()? 'form-group has-error':'form-group'}" class="form-group">
+                    <label  th:for="${#ids.next('validnumber')}" class="col-sm-3 control-label">验证码：</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" th:field="*{validnumber}" placeholder="验证码">
+                    </div>
+                    <div >
+                        <img th:src="@{/captcha.action}" width="200px" height="60px" onclick="changeImg(this)" style="cursor: pointer;"/>
+                    </div>
+
+                </div>
+                <div class="form-group" align="center">
+                    <input class="btn btn-default" id="embed-submit" type="submit" value="注册" >
+                    <a class="btn btn-default" href="show.jsp">返回</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div th:insert="framework::footer"></div>
+    <script type="application/javascript" src="/cjcx/resources/js/funtion.js"></script>
+</body>
+</html>

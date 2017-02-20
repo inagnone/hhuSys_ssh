@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>全国水利安全远程培训平台</title>
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/demo.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/easyui.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/icon.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/app.min.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/normalize.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/style.css">
+</head>
+<body style="height: 100%">
+<div class="zhezhao" id="zhezhao"></div>
+<div th:replace="framework::header"></div>
+<div class="content" style="height: 72.5%;">
+    <div class="content-body " oncontextmenu="return false" ondragstart="return false" onselectstart ="return false" onselect="document.selection.empty()"
+         oncopy="document.selection.empty()"
+         onbeforecopy="return false"
+         onmouseup="document.selection.empty()">
+        <div th:replace="framework_slider::slider(date)"></div>
+        <div class="search-block" style="width: 80%;height: 100%">
+            <div th:fragment="cj" style="width: 100%;height: 100%">
+                <div th:replace="framework_content::brand" style="height: 10%"></div>
+                <div style="height: 90%">
+                    <table id="dg"></table>
+                    <div id="tb" style="height:auto">
+                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="accept()">Accept</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject()">Reject</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="getChanges()">GetChanges</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="framework::footer"></div>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.easyui.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/content/exam.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/content/validExcelDiploma.js"></script>
+</body>
+</html>

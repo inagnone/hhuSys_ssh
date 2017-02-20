@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>全国水利安全远程培训</title>
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/demo.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/easyui.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/icon.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/app.min.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/normalize.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/style.css">
+</head>
+<body style="height: 100%">
+    <div th:replace="framework::header"></div>
+
+    <div class="content" style="height: 72.5%;">
+        <div class="content-body " oncontextmenu="return false" ondragstart="return false" onselectstart ="return false"
+             onselect="document.selection.empty()"
+             oncopy="document.selection.empty()"
+             onbeforecopy="return false"
+             onmouseup="document.selection.empty()">
+            <div th:include="cj/cj::cj" style="height: 100%"></div>
+        </div>
+    </div>
+
+    <div th:replace="framework::footer"></div>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.easyui.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/content/cj.js"></script>
+</body>
+</html>

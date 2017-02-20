@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>全国水利安全远程培训平台</title>
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/demo.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/easyui.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/icon.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/app.min.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/normalize.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/style.css">
+    <style type="text/css">
+        .zhezhao
+        {
+            width:100%;
+            height:100%;
+            background-color:#000;
+            filter:alpha(opacity=50);
+            -moz-opacity:0.5;
+            opacity:0.5;
+            position:absolute;
+            left:0px;
+            top:0px;
+            display:none;
+            z-index:1000;
+        }
+    </style>
+</head>
+<body style="height: 100%">
+<div class="zhezhao" id="zhezhao"></div>
+<div th:replace="framework::header"></div>
+<div class="content" style="height: 72.5%;">
+    <div class="content-body " oncontextmenu="return false" ondragstart="return false" onselectstart ="return false" onselect="document.selection.empty()"
+         oncopy="document.selection.empty()"
+         onbeforecopy="return false"
+         onmouseup="document.selection.empty()">
+        <div th:replace="framework_slider::slider(date)"></div>
+        <div class="search-block" style="width: 80%;height: 100%">
+            <div  style="width: 100%;height: 100%">
+                <div th:replace="framework_content::brand" style="height: 10%"></div>
+                <!-- 查询参数文本框 -->
+                <div id="toolbar" style="padding:3px">
+                    <!--<div th:if="${session.userId}">-->
+                    <div>
+                        <a id="allToExcel" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="allToExcel()">导出所有查询结果到excel文件</a>
+                        <a class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="getstu()">导出选中结果到excel文件</a>
+                        <a class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newDiploma()">添加</a>
+                        <a class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="loadExcel()">Excel文件导入</a>
+                        <a class="easyui-linkbutton" iconCls="icon-edit"  plain="true" onclick="edit()">修改</a>
+                        <a class="easyui-linkbutton" iconCls="icon-cancel"  plain="true" onclick="deletes()">删除</a>
+                        <hr>
+                    </div>
+                    <table style="font-size: 12; border-collapse:   separate;   border-spacing:   5px;">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span>考试类别:</span>
+                                <!--<select id="examtype" name="examtype"  panelHeight="auto" style="width:200px" onchange="changeExam()">-->
+                                    <!--<option th:each="exam:${exams}" th:value="${exam.number}" th:text="${exam.name}"></option>-->
+                                <!--</select>-->
+                                <input id="diplomaType1" name="diplomaType">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>岗位名称:</span>
+                                <input id="diplomaJob" name="job">
+                            </td>
+                            <td>
+                                <span>审批单位区域:</span>
+                                <input id="diplomaArea" name="area">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>姓名:</span>
+                                <input id="name" class="easyui-textbox" style="line-height:26px;border:1px solid #ccc;width:200px">
+                            </td>
+                            <td>
+                                <span>身份证号:</span>
+                                <input id="idNumber" class="easyui-textbox" style="line-height:26px;border:1px solid #ccc;width:200px">
+                            </td>
+                            <td>
+                                <span>证书编号:</span>
+                                <input id="diplomaNumber" class="easyui-textbox" style="line-height:26px;border:1px solid #ccc;width:200px">
+                            </td>
+                            <td>
+                                <span>工作单位:</span>
+                                <input id="company" class="easyui-textbox" style="line-height:26px;border:1px solid #ccc;width:200px">
+                            </td>
+                            <td>
+                            <a  class="easyui-linkbutton" plain="true" onclick="doSearch()" iconCls="icon-search">查询</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <div th:if="not session.userId" >
+                                <td>
+                                    <span>验证码:</span>
+                                    <input id="validcode" class="easyui-textbox" style="line-height:26px;border:1px solid #ccc;width:200px">
+                                </td>
+                                <td>
+                                    <img id="valid" src="AuthImage" onclick="changeImg(this)" style="cursor: pointer;"/>
+                                </td>
+                                <td>
+                                    <a  class="easyui-linkbutton" plain="true" onclick="doSearch()" iconCls="icon-search">查询</a>
+                                </td>
+
+                            </div>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="height: 90%">
+                    <table id="diplomaTable"
+                           data-options="
+                               collapsible:true,
+                               fit:true,
+                               method:'post',
+                               pagination:true,
+                               toolbar:'#toolbar',
+                               emptyMsg:'当前没有相关记录',">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="diplomaPanel" class="easyui-panel"
+     style="width:600px;padding:10px;
+            position: absolute;top:50%;left:50%;margin-left:-300px; z-index:1500;margin-top:-150px;"
+     data-options="closed:true">
+    <div style="width: 500px;margin: auto">
+        <form id="newDiploma" method="post" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <td>证书类型:</td>
+                    <!--<td>-->
+                        <!--<select id="examType2" name="examNumber" onchange="getExam2()">-->
+                            <!--<option th:each="exam:${exams}" th:value="${exam.number}" th:text="${exam.name}"></option>-->
+                        <!--</select>-->
+                    <!--</td>-->
+                    <td>
+                        <input id="diplomaType2" name="diplomaTypeNumber" value="101">
+                    </td>
+                    <td>证书编号:</td>
+                    <td><input class="easyui-textbox" type="text" name="diplomaNumber" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>姓名:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" data-options="required:true"></input></td>
+                    <td>身份证:</td>
+                    <td><input class="easyui-textbox" type="text" name="idNumber" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>工作单位:</td>
+                    <td><input class="easyui-textbox" type="text" name="company" data-options="required:true"></input></td>
+                    <td>职位:</td>
+                    <td><input class="easyui-textbox" type="text" name="job" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>学时数:</td>
+                    <td><input class="easyui-textbox" type="text" name="studyhour" data-options="required:true"></input></td>
+                    <td>委托单位:</td>
+                    <td><input class="easyui-textbox" type="text" name="commissionunit" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>发证单位:</td>
+                    <td><input class="easyui-textbox" type="text" name="issuecompany" data-options="required:true"></input></td>
+                    <td>委托单位:</td>
+                    <td><input class="easyui-textbox" type="text" name="commissionunit" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>培训方式:</td>
+                    <td><input class="easyui-textbox" type="text" name="trainway" data-options="required:true"></input></td>
+                    <td>培训机构:</td>
+                    <td><input class="easyui-textbox" type="text" name="trainer" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>批准日期:</td>
+                    <td><input class="easyui-datebox" name="approvetime" data-options="required:true,formatter:function(date){
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate();
+                    return y+'-'+m+'-'+d;}"
+                    ></input></td>
+                    <td>培训开始日期:</td>
+                    <td><input class="easyui-datebox" name="starttime" data-options="required:true,formatter:function(date){
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate();
+                    return y+'-'+m+'-'+d;}"
+                    ></input></td>
+                </tr>
+                <tr>
+                    <td>培训结束日期:</td>
+                    <td><input class="easyui-datebox" name="finishtime" data-options="required:true,formatter:function(date){
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate();
+                    return y+'-'+m+'-'+d;}"
+                    ></input></td>
+                    <td>发证日期:</td>
+                    <td><input class="easyui-datebox" name="issuetime" data-options="required:true,formatter:function(date){
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate();
+                    return y+'-'+m+'-'+d;}"
+                    ></input></td>
+                </tr>
+                <tr>
+                    <td>有效期至:</td>
+                    <td><input class="easyui-datebox" name="endtime" data-options="required:true,formatter:function(date){
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate();
+                    return y+'-'+m+'-'+d;}"
+                    ></input></td>
+                </tr>
+                <tr>
+                    <td>第一次延期:</td>
+                    <td><input class="easyui-datebox" name="firdelay" data-options="required:true,formatter:function(date){
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate();
+                    return y+'-'+m+'-'+d;}"
+                    ></input></td>
+                    <td>第二次延期:</td>
+                    <td><input class="easyui-datebox" name="secdelay" data-options="required:true,formatter:function(date){
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate();
+                    return y+'-'+m+'-'+d;}"
+                    ></input></td>
+                </tr>
+                <div style="margin-bottom:20px">
+                    <td>证书图片:</td>
+                    <td><input class="easyui-filebox" name="file" data-options="prompt:'请选择文件'" style="width:100%"></td>
+                </div>
+                <tr>
+                    <td>备注:</td>
+                    <td colspan="3"><input name="detail" class="easyui-textbox" data-options="multiline:true" value="请输入备注" style="width:300px;height:100px"></td>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#newDiploma').submit()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#diplomaPanel').panel('close');document.getElementById('zhezhao').style.display='none';document.getElementById('diplomaPanel').style.display='none' ">取消</a>
+        </div>
+    </div>
+</div>
+<div id="excel" class="easyui-panel" style="width:600px;padding:10px;
+            position: absolute;top:50%;left:50%;margin-left:-300px; z-index:1500;margin-top:-150px;"
+     data-options="closed:true">
+    <div style="width: 350px;margin: auto">
+        <table>
+            <tr>
+                <td>选择考试信息模板:</td>
+                <td><input class="easyui-textbox" type="text" name="company" data-options="required:true"></td>
+                <td><button class="easyui-linkbutton" value="下载">下载</button></td>
+            </tr>
+            <tr>
+                <td>上传新考试信息模板:</td>
+                <td><input type="file" name="temp"></td>
+            </tr>
+        </table>
+        <hr>
+        <form enctype="multipart/form-data" id="excelFile" method="post">
+            <table>
+                <tr>
+                    <td>选择证书类型:</td>
+                </tr>
+                <tr>
+                    <td>选择excel文件:</td>
+                    <td><input type="file" name="file"></td>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#excelFile').submit()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#excel').panel('close');document.getElementById('zhezhao').style.display='none';document.getElementById('p').style.display='none' ">取消</a>
+        </div>
+    </div>
+</div>
+<div th:replace="framework::footer"></div>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.easyui.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/content/diploma.js"></script>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/easyui-lang-zh_CN.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cjcx.entity.Cj" table="cj" schema="cjcx">
+        <id name="id">
+            <column name="id" sql-type="int(10)"/>
+            <generator class="increment"></generator>
+        </id>
+        <property name="idNumber">
+            <column name="id_number" sql-type="varchar(255)"/>
+        </property>
+        <property name="studentName">
+            <column name="student_name" sql-type="varchar(255)"/>
+        </property>
+        <property name="examDate">
+            <column name="exam_date" sql-type="date(10)"/>
+        </property>
+        <property name="batchNumber">
+            <column name="batch_number" sql-type="varchar(255)"/>
+        </property>
+        <property name="company">
+            <column name="company" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <set name="grades" cascade="all" lazy="false" fetch="subselect">
+            <key>
+                <column name="cj_id"></column>
+            </key>
+            <one-to-many class="cjcx.entity.Grade"></one-to-many>
+        </set>
+        <many-to-one name="exam" column="exam_number" class="cjcx.entity.Exam"></many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html style="height: 100%" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>登陆</title>
+    <link rel="stylesheet" href="/cjcx/resources/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/app.min.css">
+</head>
+<body style="height: 100% ">
+
+<div th:insert="framework::header"></div>
+
+<div th:class="${#fields.hasErrors('${loginForm.*}')?'alert alert-danger':_}" role="alert">
+    <ul th:if="${#fields.hasErrors('${loginForm.*}')}">
+        <li th:each="err:${#fields.errors('${loginForm.*}')}" th:text="${err}"></li>
+    </ul>
+</div>
+<div th:if="${msg}" th:class="${'alert alert-success alert-dismissible'}" role="alert">
+    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <span th:text="${msg}">注册成功！</span>
+</div>
+
+<div class="login-content" >
+    <div class="login-box" >
+        <div class="login-box-top">
+            <div ><img src="/cjcx/resources/img/login.png" width="128" height="62"></div>
+        </div>
+        <br>
+        <form  class="form-horizontal" th:action="@{/user/login.action}" th:object="${loginForm}" method="post">
+            <div th:class="${#fields.hasErrors()? 'form-group has-error':'form-group'}"  class="form-group" style="position: relative;left: 40px">
+                <label th:for="${#ids.next('name')}" class="col-sm-2 control-label">用户名：</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" th:field="*{name}" placeholder="用户名">
+                </div>
+            </div>
+            <div th:class="${#fields.hasErrors()? 'form-group has-error':'form-group'}" class="form-group" style="position: relative;left: 40px">
+                <label th:for="${#ids.next('password')}" class="col-sm-2 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;码：</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="password" th:field="*{password}" placeholder="密码">
+                </div>
+            </div>
+            <div th:class="${#fields.hasErrors()? 'form-group has-error':'form-group'}" class="form-group" style="position: relative;left: 40px">
+                <label class="col-sm-2 control-label">验证码：</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="text" th:field="*{validpassword}" placeholder="验证码">
+                </div>
+                <div>
+                    <img th:src="@{/captcha.action}" onclick="changeImg(this)" width="200px" height="60px" style="cursor: pointer;"/>
+                </div>
+            </div>
+            <div class="form-group" align="center" >
+                <input class="btn btn-default" id="embed-submit" type="submit" value="登陆" >
+            </div>
+        </form>
+    </div>
+</div>
+<div th:insert="framework::footer"></div>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/bootstrap.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/funtion.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cjcx.entity.Role" table="role" schema="cjcx">
+        <id name="id">
+            <column name="id" sql-type="int(10)"/>
+            <generator class="increment"></generator>
+        </id>
+        <property name="name">
+            <column name="name" sql-type="varchar(255)"/>
+        </property>
+        <property name="newCj">
+            <column name="newCj" sql-type="int(10)"/>
+        </property>
+        <property name="updateCj">
+            <column name="updateCj" sql-type="int(10)"/>
+        </property>
+        <property name="deleteCj">
+            <column name="deleteCj" sql-type="int(10)"/>
+        </property>
+        <property name="newUser">
+            <column name="newUser" sql-type="int(10)"/>
+        </property>
+        <property name="deleteUser">
+            <column name="deleteUser" sql-type="int(10)"/>
+        </property>
+        <property name="updateUser">
+            <column name="updateUser" sql-type="int(10)"/>
+        </property>
+        <property name="newRole">
+            <column name="newRole" sql-type="int(10)"/>
+        </property>
+        <property name="updateRole">
+            <column name="updateRole" sql-type="int(10)"/>
+        </property>
+        <property name="deleteRole">
+            <column name="deleteRole" sql-type="int(10)"/>
+        </property>
+        <property name="newExam">
+            <column name="newExam" sql-type="int(10)"/>
+        </property>
+        <property name="updateExam">
+            <column name="updateExam" sql-type="int(10)"/>
+        </property>
+        <property name="deleteExam">
+            <column name="deleteExam" sql-type="int(10)"/>
+        </property>
+    </class>
+</hibernate-mapping>

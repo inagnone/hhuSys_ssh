@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="cjcx.entity.Diploma" table="diploma" schema="cjcx">
+        <id name="id">
+            <column name="id" sql-type="int(10)"/>
+            <generator class="increment"></generator>
+        </id>
+        <property name="name">
+            <column name="name" sql-type="varchar(255)"/>
+        </property>
+        <property name="idNumber">
+            <column name="idNumber" sql-type="char(255)"/>
+        </property>
+        <property name="area">
+            <column name="area" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="company">
+            <column name="company" sql-type="varchar(255)"/>
+        </property>
+        <property name="job">
+            <column name="job" sql-type="varchar(255)"/>
+        </property>
+        <property name="approvetime">
+            <column name="approvetime" sql-type="date(10)" not-null="true"/>
+        </property>
+        <property name="starttime">
+            <column name="starttime" sql-type="date(10)" not-null="true"/>
+        </property>
+        <property name="finishtime">
+            <column name="finishtime" sql-type="date(10)" not-null="true"/>
+        </property>
+        <property name="studyhour">
+            <column name="studyhour" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="diplomaNumber">
+            <column name="diplomaNumber" sql-type="char(255)"/>
+        </property>
+        <property name="issuetime">
+            <column name="issuetime" sql-type="date(10)"/>
+        </property>
+        <property name="validity">
+            <column name="validity" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="endtime">
+            <column name="endtime" sql-type="date(10)"/>
+        </property>
+        <property name="issuecompany">
+            <column name="issuecompany" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="imgpath">
+            <column name="imgpath" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="commissionunit">
+            <column name="commissionunit" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="undertaker">
+            <column name="undertaker" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="firdelay">
+            <column name="firdelay" sql-type="date(10)" not-null="true"/>
+        </property>
+        <property name="secdelay">
+            <column name="secdelay" sql-type="date(10)" not-null="true"/>
+        </property>
+        <property name="detail">
+            <column name="detail" sql-type="text(65535)" length="65535" not-null="true"/>
+        </property>
+        <property name="trainhour">
+            <column name="trainhour" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="examtime">
+            <column name="examtime" sql-type="date(10)" not-null="true"/>
+        </property>
+        <property name="trainway">
+            <column name="trainway" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="trainer">
+            <column name="trainer" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <many-to-one name="diplomaType" column="typeNumber" class="cjcx.entity.DiplomaType"></many-to-one>
+    </class>
+</hibernate-mapping>

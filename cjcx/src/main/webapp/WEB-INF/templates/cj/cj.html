@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>全国水利安全远程培训平台</title>
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/demo.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/easyui.css">
+    <link rel="stylesheet" href="/cjcx/resources/easyui/css/icon.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/app.min.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/normalize.css">
+    <link rel="stylesheet" href="/cjcx/resources/css/style.css">
+    <style type="text/css">
+        .zhezhao
+        {
+            width:100%;
+            height:100%;
+            background-color:#000;
+            filter:alpha(opacity=50);
+            -moz-opacity:0.5;
+            opacity:0.5;
+            position:absolute;
+            left:0px;
+            top:0px;
+            display:none;
+            z-index:1000;
+        }
+    </style>
+</head>
+<body style="height: 100%">
+<div class="zhezhao" id="zhezhao"></div>
+<div th:replace="framework::header"></div>
+<div class="content" style="height: 72.5%;">
+    <div class="content-body " oncontextmenu="return false" ondragstart="return false" onselectstart ="return false" onselect="document.selection.empty()"
+         oncopy="document.selection.empty()"
+         onbeforecopy="return false"
+         onmouseup="document.selection.empty()">
+        <div th:replace="framework_slider::slider(date)"></div>
+        <div class="search-block" style="width: 80%;height: 100%">
+            <div th:fragment="cj" style="width: 100%;height: 100%">
+                <div th:replace="framework_content::brand" style="height: 10%"></div>
+                <!-- 查询参数文本框 -->
+                <div id="toolbar" style="padding:3px">
+                    <div th:if="${session.userId}">
+                        <a id="allToExcel" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="allToExcel()">导出所有查询结果到excel文件</a>
+                        <a class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="getstu()">导出选中结果到excel文件</a>
+                        <a class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newCj()">添加</a>
+                        <a class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="loadExcel()">Excel文件导入</a>
+                        <a class="easyui-linkbutton" iconCls="icon-edit"  plain="true" onclick="edit()">修改</a>
+                        <a class="easyui-linkbutton" iconCls="icon-cancel"  plain="true" onclick="deletes()">删除</a>
+                        <hr>
+                    </div>
+                    <table style="font-size: 12; border-collapse:   separate;   border-spacing:   5px;">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span>考试类别:</span>
+                                <select id="examtype" name="examtype"  panelHeight="auto" style="width:200px" onchange="changeExam()">
+                                    <option th:each="exam:${exams}" th:value="${exam.number}" th:text="${exam.name}"></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:</span>
+                                <input id="stuname" class="easyui-textbox" style="line-height:26px;border:1px solid #ccc;width:200px">
+                            </td>
+                            <td>
+                                <span>身份证号:</span>
+                                <input id="idNumber" class="easyui-textbox" style="line-height:26px;border:1px solid #ccc">
+                            </td>
+                            <div th:if="session.userId" >
+                                <td>
+                                    <a  class="easyui-linkbutton" plain="true" onclick="doSearch()" iconCls="icon-search">查询</a>
+                                </td>
+                            </div>
+                        </tr>
+                        <tr>
+                            <div th:if="not session.userId" >
+                                <td>
+                                    <span>验证码:</span>
+                                    <input id="validcode" class="easyui-textbox" style="line-height:26px;border:1px solid #ccc;width:200px">
+                                </td>
+                                <td>
+                                    <img id="valid" src="AuthImage" onclick="changeImg(this)" style="cursor: pointer;"/>
+                                </td>
+                                <td>
+                                    <a  class="easyui-linkbutton" plain="true" onclick="doSearch()" iconCls="icon-search">查询</a>
+                                </td>
+                            </div>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="height: 90%">
+                    <table id="exam"
+                           data-options="
+                               collapsible:true,
+                               fit:true,
+                               method:'post',
+                               pagination:true,
+                               toolbar:'#toolbar',
+                               emptyMsg:'当前没有相关记录',">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="p" class="easyui-panel"
+     style="width:600px;padding:10px;
+            position: absolute;top:50%;left:50%;margin-left:-300px; z-index:1500;margin-top:-150px;"
+     data-options="closed:true,
+                    onOpen:getExam2">
+    <div style="width: 300px;margin: auto">
+        <form id="newExam" method="post">
+            <table>
+                <tr>
+                    <td>考试类型:</td>
+                    <td>
+                        <select id="examType2" name="examNumber" onchange="getExam2()">
+                            <option th:each="exam:${exams}" th:value="${exam.number}" th:text="${exam.name}"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>姓名:</td>
+                    <td><input class="easyui-textbox" type="text" name="studentName" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>身份证:</td>
+                    <td><input class="easyui-textbox" type="text" name="idNumber" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>考试日期:</td>
+                    <td><input class="easyui-datebox" name="examDate" data-options="required:true,formatter:function(date){
+                    var y = date.getFullYear();
+                    var m = date.getMonth()+1;
+                    var d = date.getDate();
+                    return y+'-'+m+'-'+d;}"
+                    ></input></td>
+                </tr>
+                <tr>
+                    <td>考试批次:</td>
+                    <td><input class="easyui-textbox" type="text" name="batchNumber" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td>工作单位:</td>
+                    <td><input class="easyui-textbox" type="text" name="company" data-options="required:true"></input></td>
+                </tr>
+                <table id="testCj" width="300px">
+                </table>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#newExam').submit()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#p').panel('close');document.getElementById('zhezhao').style.display='none';document.getElementById('p').style.display='none' ">取消</a>
+        </div>
+    </div>
+</div>
+<div id="excel" class="easyui-panel" style="width:600px;padding:10px;
+            position: absolute;top:50%;left:50%;margin-left:-300px; z-index:1500;margin-top:-150px;"
+            data-options="closed:true">
+    <div style="width: 350px;margin: auto">
+        <table>
+            <tr>
+                <td>选择考试信息模板:</td>
+                <td><input class="easyui-textbox" type="text" name="company" data-options="required:true"></td>
+                <td><button class="easyui-linkbutton" value="下载">下载</button></td>
+            </tr>
+            <tr>
+                <td>上传新考试信息模板:</td>
+                <td><input type="file" name="temp"></td>
+            </tr>
+        </table>
+        <hr>
+        <form enctype="multipart/form-data" id="excelFile" method="post">
+            <table>
+                <tr>
+                    <td>选择考试类型:</td>
+                </tr>
+                <tr>
+                    <td>选择excel文件:</td>
+                    <td><input type="file" name="file"></td>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#excelFile').submit()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#excel').panel('close');document.getElementById('zhezhao').style.display='none';document.getElementById('p').style.display='none' ">取消</a>
+        </div>
+    </div>
+</div>
+<div th:replace="framework::footer"></div>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/jquery.easyui.min.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/content/exam.js"></script>
+<script type="application/javascript" src="/cjcx/resources/js/content/cj.js"></script>
+<script type="application/javascript" src="/cjcx/resources/easyui/js/easyui-lang-zh_CN.js"></script>
+</body>
+</html>

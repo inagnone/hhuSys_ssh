@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/cache
+       http://www.springframework.org/schema/cache/spring-cache.xsd">
+    <import resource="classpath:spring/dispatcher-servlet.xml"></import>
+    <import resource="classpath:spring/captcha.xml"></import>
+    <!-- 引入dataSource 把dao层和service层的类导入进来 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <value>classpath:hibernate/jdbc.properties</value>
+        </property>
+    </bean>
+    <bean id="dataSource" destroy-method="close"
+          class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+    </bean>
+    <bean id="JdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+        <constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
+    </bean>
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation">
+            <value>classpath:hibernate/hibernate.cfg.xml</value>
+        </property>
+    </bean>
+
+    <bean id="txManage" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <bean id="Transaction" class="cjcx.advoice.Transaction"></bean>
+
+    <cache:annotation-driven/>
+    <context:component-scan base-package="cjcx.service"></context:component-scan>
+    <context:component-scan base-package="cjcx.dao"></context:component-scan>
+    <context:component-scan base-package="cjcx.advoice"></context:component-scan>
+
+    <!-- 定义CacheManager -->
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache/ehcache.xml"></property>
+        <property name="shared" value="true"></property>
+    </bean>
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <!-- 指定配置文件的位置 -->
+        <property name="cacheManager" ref="ehcache"></property>
+    </bean>
+
+    <bean id="log" class="cjcx.advoice.Log"></bean>
+    <bean id="privilege" class="cjcx.advoice.Privilege"></bean>
+    <!-- aop注解解析器 -->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+    <aop:config>
+        <aop:pointcut id="perform" expression="execution(* cjcx.service.*.*(..))"></aop:pointcut>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="perform"></aop:advisor>
+        <aop:aspect ref="privilege">
+            <aop:around method="controlTargetMethod" pointcut-ref="perform"></aop:around>
+        </aop:aspect>
+        <aop:aspect ref="log">
+            <aop:after-throwing method="exceptionLog" pointcut-ref="perform" throwing="ex"></aop:after-throwing>
+        </aop:aspect>
+        <!--<aop:aspect ref="Transaction">-->
+            <!--<aop:before method="beginTransaction" pointcut-ref="perform"></aop:before>-->
+            <!--<aop:after-returning method="commitTransaction" pointcut-ref="perform"></aop:after-returning>-->
+            <!--<aop:after method="closeTransaction" pointcut-ref="perform"></aop:after>-->
+        <!--</aop:aspect>-->
+        <!--<aop:aspect ref="Exception">-->
+            <!--<aop:after-throwing pointcut-ref="perform" throwing="ex" method=""></aop:after-throwing>-->
+        <!--</aop:aspect>-->
+
+    </aop:config>
+
+    <!-- 声明式事务 -->
+    <tx:advice id="txAdvice" transaction-manager="txManage">
+        <tx:attributes>
+            <tx:method name="add*" read-only="false" propagation="REQUIRED" isolation="DEFAULT"></tx:method>
+            <tx:method name="update*" read-only="false" propagation="REQUIRED" isolation="DEFAULT"></tx:method>
+            <tx:method name="show*" read-only="false" propagation="REQUIRED" isolation="DEFAULT"></tx:method>
+            <tx:method name="delete*" read-only="false" propagation="REQUIRED" isolation="DEFAULT"></tx:method>
+            <tx:method name="get*" read-only="true" propagation="REQUIRED" isolation="DEFAULT"/>
+            <tx:method name="list*" read-only="true" propagation="REQUIRED" isolation="DEFAULT"></tx:method>
+        </tx:attributes>
+    </tx:advice>
+</beans>
